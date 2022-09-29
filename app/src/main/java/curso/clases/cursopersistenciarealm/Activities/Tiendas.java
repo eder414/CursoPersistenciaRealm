@@ -134,4 +134,10 @@ public class Tiendas extends AppCompatActivity implements View.OnClickListener, 
         });
         rvAdapterTiendas.notifyDataSetChanged();
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        rvAdapterTiendas.notifyDataSetChanged();
+    }
 }

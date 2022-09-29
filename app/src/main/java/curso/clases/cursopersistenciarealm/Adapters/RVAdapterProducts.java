@@ -10,32 +10,39 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatDialogFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
+import curso.clases.cursopersistenciarealm.Dialogs.ProductDialog;
+import curso.clases.cursopersistenciarealm.Interface.IChangeDialog;
 import curso.clases.cursopersistenciarealm.Interface.ItemClickListener;
 import curso.clases.cursopersistenciarealm.Interface.ItemClickListenerProducto;
 import curso.clases.cursopersistenciarealm.Models.Producto;
 import curso.clases.cursopersistenciarealm.Models.Tiendas;
 import curso.clases.cursopersistenciarealm.R;
+import io.realm.Realm;
+import io.realm.RealmList;
 
 public class RVAdapterProducts extends RecyclerView.Adapter<RVAdapterProducts.ViewHolder>{
     private List<Producto> lProducto;
     private LayoutInflater mInflater;
     private Context context;
     private ItemClickListenerProducto itemClickListenerProducto;
+    private IChangeDialog iChangeDialog;
 
-    public RVAdapterProducts(List<Producto> lProducto, LayoutInflater mInflater, Context context, ItemClickListenerProducto itemClickListenerProducto, Tiendas tienda) {
+    public RVAdapterProducts(List<Producto> lProducto, LayoutInflater mInflater, Context context, ItemClickListenerProducto itemClickListenerProducto, Tiendas tienda, IChangeDialog iChangeDialog) {
         this.lProducto = lProducto;
         this.mInflater = mInflater;
         this.context = context;
         this.itemClickListenerProducto = itemClickListenerProducto;
+        this.iChangeDialog = iChangeDialog;
     }
 
     @NonNull
     @Override
-    public RVAdapterProducts.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context.getApplicationContext()).inflate(R.layout.recycler_products,parent,false);
         return new RVAdapterProducts.ViewHolder(view);
     }
@@ -50,6 +57,37 @@ public class RVAdapterProducts extends RecyclerView.Adapter<RVAdapterProducts.Vi
         return lProducto.size();
     }
 
+    public void eliminarProducto(int groupId,Tiendas tienda) {
+        int productoId = lProducto.get(groupId).getId();
+        Realm realm = Realm.getDefaultInstance();
+
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                lProducto.remove(groupId);
+                tienda.setProductos((RealmList<Producto>) lProducto);
+                realm.copyToRealmOrUpdate(tienda);
+                notifyDataSetChanged();
+            }
+        });
+    }
+
+    public void editatProducto(int groupId,Tiendas tienda,int productId) {
+        ProductDialog productDialog = new ProductDialog(tienda,groupId);
+        iChangeDialog.ChangeDialog(productDialog ,tienda,productId);
+        /*Realm realm = Realm.getDefaultInstance();*/
+
+        /*realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                lProducto.remove(groupId);
+                tienda.setProductos((RealmList<Producto>) lProducto);
+                realm.copyToRealmOrUpdate(tienda);
+                notifyDataSetChanged();
+            }
+        });*/
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener {
         ImageView imageView;
         TextView nombre,precio,cantidad;
@@ -61,6 +99,9 @@ public class RVAdapterProducts extends RecyclerView.Adapter<RVAdapterProducts.Vi
             precio = view.findViewById(R.id.textPrecio);
             cantidad = view.findViewById(R.id.textCantidad);
             imageView = view.findViewById(R.id.imageView);
+
+            linearLayout = view.findViewById(R.id.linearLayout);
+            linearLayout.setOnCreateContextMenuListener(this);
 
         }
 

@@ -43,6 +43,9 @@ public class Products extends AppCompatActivity implements View.OnClickListener,
     }
 
     private void AbrirDialogBox() {
+        int width = (int)(getResources().getDisplayMetrics().widthPixels*0.90);
+        int height = (int)(getResources().getDisplayMetrics().heightPixels*0.90);
+
         ProductDialog productDialog = new ProductDialog();
         productDialog.show(getSupportFragmentManager(),"Añadir Producto");
     }

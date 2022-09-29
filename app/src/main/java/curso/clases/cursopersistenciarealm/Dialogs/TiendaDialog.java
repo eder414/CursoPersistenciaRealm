@@ -3,9 +3,13 @@ package curso.clases.cursopersistenciarealm.Dialogs;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Point;
 import android.os.Bundle;
+import android.view.Display;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
@@ -59,5 +63,22 @@ public class TiendaDialog extends AppCompatDialogFragment {
         catch (ClassCastException e){
             throw  new ClassCastException(context.toString() + "must implement IDialogTiendaListener");
         }
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        Window window = getDialog().getWindow();
+        Point size = new Point();
+
+        Display display = window.getWindowManager().getDefaultDisplay();
+        display.getSize(size);
+
+        int width = size.x;
+        int height = size.y;
+
+        //window.setLayout((int) (width * 0.75), WindowManager.LayoutParams.WRAP_CONTENT);
+        window.setLayout((int) (width * 0.85), (int) (height * 0.50));
+
+        window.setGravity(Gravity.CENTER);
     }
 }

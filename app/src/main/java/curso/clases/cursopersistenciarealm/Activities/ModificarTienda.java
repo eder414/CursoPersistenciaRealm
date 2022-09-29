@@ -1,6 +1,8 @@
 package curso.clases.cursopersistenciarealm.Activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDialogFragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -9,7 +11,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -22,6 +26,7 @@ import curso.clases.cursopersistenciarealm.Adapters.RVAdapterTiendas;
 import curso.clases.cursopersistenciarealm.Dialogs.ProductDialog;
 import curso.clases.cursopersistenciarealm.Dialogs.TiendaDialog;
 import curso.clases.cursopersistenciarealm.Interface.DialogListener;
+import curso.clases.cursopersistenciarealm.Interface.IChangeDialog;
 import curso.clases.cursopersistenciarealm.Interface.ItemClickListener;
 import curso.clases.cursopersistenciarealm.Interface.ItemClickListenerProducto;
 import curso.clases.cursopersistenciarealm.Models.Producto;
@@ -31,13 +36,15 @@ import io.realm.Realm;
 import io.realm.RealmList;
 
 public class ModificarTienda extends AppCompatActivity implements View.OnClickListener, DialogListener {
-
+    Button btnGuardar, btnCancelar;
     EditText nombre,direccion;
     FloatingActionButton fabAddProducto;
     Boolean isAllFabsVisible;
     Realm realm;
 
     ItemClickListenerProducto itemClickListenerProducto;
+    IChangeDialog iChangeDialog;
+
     RVAdapterProducts rvAdapterProducts;
     private LayoutInflater mInflater;
     curso.clases.cursopersistenciarealm.Models.Tiendas tienda;
@@ -60,6 +67,12 @@ public class ModificarTienda extends AppCompatActivity implements View.OnClickLi
         nombre.setText(tienda.getNombre());
         direccion.setText(tienda.getDireccion());
 
+        btnGuardar = findViewById(R.id.btnGuardar);
+        btnCancelar = findViewById(R.id.btnCancelar);
+
+        btnGuardar.setOnClickListener(this);
+        btnCancelar.setOnClickListener(this);
+
         isAllFabsVisible = false;
         fabAddProducto = findViewById(R.id.fabAddProducto);
 
@@ -72,7 +85,13 @@ public class ModificarTienda extends AppCompatActivity implements View.OnClickLi
 
             }
         };
-        rvAdapterProducts = new RVAdapterProducts(this.lProducto,mInflater,this,itemClickListenerProducto,tienda);
+        iChangeDialog = new IChangeDialog() {
+            @Override
+            public void ChangeDialog(AppCompatDialogFragment dialogFragment, Tiendas tienda,int productId) {
+                dialogFragment.show(getSupportFragmentManager(),"Añadir Producto");
+            }
+        };
+        rvAdapterProducts = new RVAdapterProducts(this.lProducto,mInflater,this,itemClickListenerProducto,tienda,iChangeDialog);
         RecyclerView recyclerView = findViewById(R.id.rvProducts);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -80,6 +99,8 @@ public class ModificarTienda extends AppCompatActivity implements View.OnClickLi
         recyclerView.addItemDecoration(new DividerItemDecoration(this,DividerItemDecoration.HORIZONTAL));
 
         recyclerView.setAdapter(rvAdapterProducts);
+
+
     }
 
     @Override
@@ -88,7 +109,25 @@ public class ModificarTienda extends AppCompatActivity implements View.OnClickLi
             case R.id.fabAddProducto:
                 AbrirDialogBox();
                 break;
+            case R.id.btnGuardar:
+                GuardarTienda();
+                break;
+            case R.id.btnCancelar:
+                AbrirDialogBox();
+                break;
         }
+    }
+
+    private void GuardarTienda() {
+
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                tienda.setNombre(nombre.getText().toString());
+                tienda.setDireccion(direccion.getText().toString());
+                realm.copyToRealmOrUpdate(tienda);
+            }
+        });
     }
 
     private void AbrirDialogBox() {
@@ -130,4 +169,19 @@ public class ModificarTienda extends AppCompatActivity implements View.OnClickLi
         });
         rvAdapterProducts.notifyDataSetChanged();
     }
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case 1:
+                rvAdapterProducts.eliminarProducto(item.getGroupId(),tienda);
+                Toast.makeText(curso.clases.cursopersistenciarealm.Activities.ModificarTienda.this,"Eliminado",Toast.LENGTH_SHORT).show();
+                break;
+            case 2:
+                rvAdapterProducts.editatProducto(item.getGroupId(),tienda,item.getItemId());
+                Toast.makeText(curso.clases.cursopersistenciarealm.Activities.ModificarTienda.this,"Editar",Toast.LENGTH_SHORT).show();
+                break;
+        }
+        return super.onContextItemSelected(item);
+    }
+
 }
