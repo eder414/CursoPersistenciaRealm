@@ -1,6 +1,7 @@
 package curso.clases.cursopersistenciarealm.Adapters;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -106,7 +107,13 @@ public class RVAdapterProducts extends RecyclerView.Adapter<RVAdapterProducts.Vi
         }
 
         public void bindData(Producto producto) {
-            nombre.setText(producto.getNombre());
+            Uri uriImage ;
+            if(producto.getImagen() != null && !producto.getImagen().equals("")){
+                uriImage = Uri.parse(producto.getImagen());
+                imageView.setImageURI(uriImage);
+            }
+
+            nombre.setText(producto.getNombre());;
             precio.setText(""+producto.getPrecio());
             cantidad.setText(""+producto.getCantidad());
 

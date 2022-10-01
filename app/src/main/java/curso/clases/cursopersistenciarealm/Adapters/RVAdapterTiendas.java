@@ -3,6 +3,7 @@ package curso.clases.cursopersistenciarealm.Adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -73,9 +74,14 @@ public class RVAdapterTiendas extends RecyclerView.Adapter<RVAdapterTiendas.View
 
         }
         void bindData(final Tiendas tienda){
-            System.out.println("nombre: "+tienda.getNombre());
+            if(tienda.getImagen() != null){
+                Uri uriImage = Uri.parse(tienda.getImagen());
+                imageView.setImageURI(uriImage);
+            }
+
             nombre.setText(tienda.getNombre());
             direccion.setText(tienda.getDireccion());
+
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

@@ -2,6 +2,7 @@ package curso.clases.cursopersistenciarealm.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -11,6 +12,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import curso.clases.cursopersistenciarealm.Dialogs.ProductDialog;
 import curso.clases.cursopersistenciarealm.Interface.DialogListener;
 import curso.clases.cursopersistenciarealm.Models.Producto;
+import curso.clases.cursopersistenciarealm.Models.UpdateVariable;
 import curso.clases.cursopersistenciarealm.Models.Usuario;
 import curso.clases.cursopersistenciarealm.R;
 import io.realm.Realm;
@@ -51,7 +53,7 @@ public class Products extends AppCompatActivity implements View.OnClickListener,
     }
 
     @Override
-    public void GuardarProducto(String editTextNombre, String editTextPrecio, String editTextCantidad) {
+    public void GuardarProducto(String editTextNombre, String editTextPrecio, String editTextCantidad, String path, UpdateVariable updateVariable ) {
         //Toast.makeText(getApplicationContext(),"precio: "+editTextPrecio,Toast.LENGTH_LONG).show();
         realm = Realm.getDefaultInstance();
 
