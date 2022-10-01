@@ -7,7 +7,10 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -106,12 +109,14 @@ public class Tiendas extends AppCompatActivity implements View.OnClickListener, 
 
 
     @Override
-    public void GuardarTienda(String nombre, String direccion) {
+    public void GuardarTienda(String nombre, String direccion, Uri uriImage) {
 
+        String s = getRealPathFromURI(uriImage);
 
         curso.clases.cursopersistenciarealm.Models.Tiendas tienda = new curso.clases.cursopersistenciarealm.Models.Tiendas();
         tienda.setNombre(nombre);
         tienda.setDireccion(direccion);
+        tienda.setImagen(s);
 
         Number lastId = realm.where(curso.clases.cursopersistenciarealm.Models.Tiendas.class).max("id");
 
@@ -133,5 +138,20 @@ public class Tiendas extends AppCompatActivity implements View.OnClickListener, 
             }
         });
         rvAdapterTiendas.notifyDataSetChanged();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        rvAdapterTiendas.notifyDataSetChanged();
+    }
+    public String getRealPathFromURI(Uri uri) {
+        String[] projection = { MediaStore.Images.Media.DATA };
+        @SuppressWarnings("deprecation")
+        Cursor cursor = managedQuery(uri, projection, null, null, null);
+        int column_index = cursor
+                .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        return cursor.getString(column_index);
     }
 }

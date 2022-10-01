@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/linearLayoutDialogProduct"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -11,7 +12,8 @@
         android:orientation="horizontal">
         <TextView
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
             android:layout_weight="30"
             android:text="Nombre:"
             android:textSize="6pt"
@@ -19,7 +21,8 @@
         <EditText
             android:id="@+id/editTextNombre"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
             android:layout_weight="70"
             android:textSize="6pt"
             android:hint="Nombre de producto"
@@ -32,7 +35,8 @@
         android:gravity="center">
         <TextView
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
             android:layout_weight="30"
             android:text="Precio:"
             android:textSize="6pt"
@@ -40,7 +44,8 @@
         <EditText
             android:id="@+id/editTextPrecio"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
             android:layout_weight="70"
             android:textSize="6pt"
             android:hint="Precio del producto"
@@ -53,7 +58,8 @@
         android:gravity="center">
         <TextView
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
             android:layout_weight="30"
             android:text="Cantidad:"
             android:textSize="6pt"
@@ -61,7 +67,8 @@
         <EditText
             android:id="@+id/editTextCantidad"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
             android:layout_weight="70"
             android:textSize="6pt"
             android:hint="Cantidad de producto"
@@ -72,13 +79,13 @@
         android:layout_height="0dp"
         android:layout_weight="25"
         android:gravity="center">
-        <TextView
+        <ImageView
+            android:id="@+id/imageProduct"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
             android:layout_weight="30"
-            android:text="Imagen:"
-            android:textSize="6pt"
-            ></TextView>
+            ></ImageView>
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -87,7 +94,8 @@
             <Button
                 android:id="@+id/editTextImagen"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
                 android:textSize="6pt"
                 android:text="Imagen..."
                 ></Button>
